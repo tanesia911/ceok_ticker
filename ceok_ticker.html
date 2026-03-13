@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="CEOK Ticker">
+<meta name="theme-color" content="#08090d">
+<title>CEOK Ticker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #08090d;
+  --surface: #0f1117;
+  --surface2: #161a24;
+  --surface3: #1c2130;
+  --border: #1f2a3d;
+  --accent: #00d4aa;
+  --red: #ff4060;
+  --red2: #ff6080;
+  --green: #00d4aa;
+  --green2: #00ffcc;
+  --yellow: #ffd166;
+  --orange: #ff8c42;
+  --text: #e8eaf2;
+  --text2: #8892a8;
+  --text3: #4a5568;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 13px;
+  min-height: 100vh;
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: calc(env(safe-area-inset-bottom) + 20px);
+}
+
+/* ── HEADER ── */
+.header {
+  background: linear-gradient(180deg, #0d1020 0%, var(--bg) 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  backdrop-filter: blur(8px);
+}
+.header-logo { font-size: 15px; font-weight: 900; letter-spacing: -0.5px; color: var(--accent); }
+.header-logo span { color: var(--text3); font-size: 10px; font-weight: 400; margin-left: 6px; }
+.header-sub { font-size: 9px; color: var(--text3); margin-top: 1px; }
+
+/* ── CONTAINER ── */
+.container { padding: 10px 12px; max-width: 600px; margin: 0 auto; }
+
+/* ── SEARCH BOX ── */
+.search-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px;
+  margin-bottom: 10px;
+}
+.search-row { display: flex; gap: 6px; margin-bottom: 10px; }
+.ticker-input {
+  flex: 1;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 15px;
+  font-family: 'JetBrains Mono', monospace;
+  outline: none;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: border-color 0.2s;
+}
+.ticker-input:focus { border-color: var(--accent); }
+.ticker-input::placeholder { color: var(--text3); font-size: 12px; letter-spacing: 0; font-family: 'Noto Sans KR', sans-serif; }
+.btn-analyze {
+  background: var(--accent);
+  color: var(--bg);
+  border: none;
+  border-radius: 10px;
+  padding: 10px 18px;
+  font-size: 13px;
+  font-weight: 900;
+  cursor: pointer;
+  font-family: 'Noto Sans KR', sans-serif;
+  transition: opacity 0.2s;
+  white-space: nowrap;
+}
+.btn-analyze:hover { opacity: 0.85; }
+.btn-analyze:disabled { opacity: 0.45; pointer-events: none; }
+
+/* ── CHIPS ── */
+.chips { display: flex; flex-wrap: wrap; gap: 5px; }
+.chip {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text2);
+  border-radius: 20px;
+  padding: 4px 11px;
+  font-size: 11px;
+  font-family: 'JetBrains Mono', monospace;
+  cursor: pointer;
+  transition: all 0.15s;
+  user-select: none;
+}
+.chip:hover, .chip.active {
+  background: var(--accent);
+  color: var(--bg);
+  border-color: var(--accent);
+  font-weight: 700;
+}
+
+/* ── RESULT PANEL ── */
+.result { display: none; flex-direction: column; gap: 10px; margin-top: 10px; }
+.result.visible { display: flex; }
+
+/* ── PRICE HEADER ── */
+.price-header {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+.price-header::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 3px;
+  background: var(--accent);
+  border-radius: 14px 14px 0 0;
+}
+.price-ticker { font-size: 11px; color: var(--text3); margin-bottom: 2px; letter-spacing: 2px; }
+.price-val {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1;
+}
+.price-chg { font-size: 12px; margin-top: 4px; }
+.price-right { text-align: right; }
+.price-pct { font-family: 'JetBrains Mono', monospace; font-size: 22px; font-weight: 700; }
+.vol-wrap { margin-top: 4px; }
+.vol-label { font-size: 9px; color: var(--text3); }
+.vol-val { font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 700; }
+.vol-sig { font-size: 9px; color: var(--text3); }
+
+/* ── VERDICT CARD ── */
+.verdict-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px;
+}
+.verdict-label { font-size: 9px; color: var(--text3); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+.verdict-score-row { display: flex; align-items: center; gap: 14px; }
+.verdict-score-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 42px;
+  font-weight: 700;
+  min-width: 58px;
+  line-height: 1;
+}
+.verdict-right { flex: 1; }
+.verdict-bar-bg { height: 8px; background: var(--surface2); border-radius: 4px; overflow: hidden; margin-bottom: 10px; }
+.verdict-bar-fill { height: 100%; border-radius: 4px; transition: width 0.7s, background 0.7s; }
+.verdict-text { font-size: 18px; font-weight: 900; }
+.verdict-sub { font-size: 10px; color: var(--text2); margin-top: 4px; }
+
+/* ── ENTRY / TARGET / STOP ── */
+.trade-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
+.trade-card {
+  border-radius: 10px;
+  padding: 10px;
+  text-align: center;
+  border: 1px solid transparent;
+}
+.trade-card.entry  { background: rgba(0,212,170,0.06);  border-color: rgba(0,212,170,0.2); }
+.trade-card.target { background: rgba(255,209,102,0.06); border-color: rgba(255,209,102,0.2); }
+.trade-card.stop   { background: rgba(255,64,96,0.06);   border-color: rgba(255,64,96,0.2); }
+.trade-lbl { font-size: 9px; color: var(--text3); margin-bottom: 4px; }
+.trade-val { font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700; word-break: break-all; }
+.trade-card.entry  .trade-val { color: var(--green); }
+.trade-card.target .trade-val { color: var(--yellow); }
+.trade-card.stop   .trade-val { color: var(--red); }
+
+/* ── INDICATOR LIST ── */
+.section-title {
+  font-size: 9px;
+  color: var(--text3);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.section-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+.ind-list { display: flex; flex-direction: column; gap: 4px; }
+.ind-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  background: var(--surface2);
+  border-radius: 8px;
+}
+.ind-name { min-width: 100px; font-size: 10px; color: var(--text2); }
+.ind-val { font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700; min-width: 60px; }
+.ind-bar-wrap { flex: 1; }
+.ind-bar-bg { height: 4px; background: var(--surface3); border-radius: 2px; overflow: hidden; }
+.ind-bar-fill { height: 100%; border-radius: 2px; transition: width 0.6s; }
+.ind-sig { font-size: 10px; color: var(--text2); text-align: right; min-width: 120px; }
+
+/* ── LEGEND CARDS ── */
+.legend-list { display: flex; flex-direction: column; gap: 6px; }
+.legend-card {
+  padding: 10px 12px;
+  background: var(--surface2);
+  border-radius: 10px;
+  border-left: 3px solid var(--border);
+}
+.legend-top { display: flex; align-items: center; gap: 7px; margin-bottom: 5px; }
+.legend-icon { font-size: 13px; }
+.legend-name { font-size: 12px; font-weight: 700; color: var(--text); }
+.legend-tool { font-size: 9px; color: var(--text3); background: var(--surface3); padding: 2px 6px; border-radius: 4px; }
+.legend-opinion { font-size: 11px; color: var(--text2); line-height: 1.65; }
+
+/* ── LOADING OVERLAY ── */
+.loading-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(8,9,13,0.75);
+  z-index: 200;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 14px;
+  backdrop-filter: blur(4px);
+}
+.loading-overlay.show { display: flex; }
+.spinner-big {
+  width: 42px; height: 42px;
+  border: 3px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.75s linear infinite;
+}
+.loading-ticker { font-family: 'JetBrains Mono', monospace; font-size: 18px; font-weight: 700; color: var(--accent); letter-spacing: 2px; }
+.loading-msg { font-size: 11px; color: var(--text3); }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── TOAST ── */
+.toast {
+  position: fixed;
+  bottom: calc(20px + env(safe-area-inset-bottom));
+  left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  background: var(--surface3);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 9px 20px;
+  border-radius: 20px;
+  font-size: 12px;
+  z-index: 9999;
+  transition: transform 0.3s ease;
+  white-space: nowrap;
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+/* ── COLOR UTILS ── */
+.up    { color: var(--green); }
+.dn    { color: var(--red); }
+.neu   { color: var(--yellow); }
+.muted { color: var(--text3); }
+
+/* ── DIVIDER ── */
+.divider { height: 1px; background: var(--border); margin: 2px 0 8px; }
+
+/* ── FOOTER NOTICE ── */
+.footer-notice {
+  text-align: center;
+  font-size: 9px;
+  color: var(--text3);
+  padding: 16px 0 4px;
+  line-height: 1.7;
+}
+
+@media (max-width: 360px) {
+  .trade-row { grid-template-columns: 1fr; }
+  .ind-sig { min-width: 90px; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div>
+    <div class="header-logo">📊 CEOK <span>TICKER</span></div>
+    <div class="header-sub">개별 종목 단기 기술적 분석</div>
+  </div>
+</div>
+
+<!-- LOADING OVERLAY -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="spinner-big"></div>
+  <div class="loading-ticker" id="loadingTicker">-</div>
+  <div class="loading-msg" id="loadingMsg">데이터 수집 중...</div>
+</div>
+
+<div class="container">
+
+  <!-- ── 검색 박스 ── -->
+  <div class="search-box">
+    <div class="search-row">
+      <input class="ticker-input" id="tickerInput" type="text"
+        placeholder="티커 입력  예) TQQQ  NVDA  BTC"
+        maxlength="15"
+        onkeydown="if(event.key==='Enter')analyze()">
+      <button class="btn-analyze" id="analyzeBtn" onclick="analyze()">분석</button>
+    </div>
+    <div class="chips" id="chips">
+      <div class="chip" onclick="pickChip(this,'TQQQ')">TQQQ</div>
+      <div class="chip" onclick="pickChip(this,'SQQQ')">SQQQ</div>
+      <div class="chip" onclick="pickChip(this,'SOXL')">SOXL</div>
+      <div class="chip" onclick="pickChip(this,'SOXS')">SOXS</div>
+      <div class="chip" onclick="pickChip(this,'UVXY')">UVXY</div>
+      <div class="chip" onclick="pickChip(this,'QQQ')">QQQ</div>
+      <div class="chip" onclick="pickChip(this,'SPY')">SPY</div>
+      <div class="chip" onclick="pickChip(this,'NVDA')">NVDA</div>
+      <div class="chip" onclick="pickChip(this,'TSLA')">TSLA</div>
+      <div class="chip" onclick="pickChip(this,'AAPL')">AAPL</div>
+      <div class="chip" onclick="pickChip(this,'MSFT')">MSFT</div>
+      <div class="chip" onclick="pickChip(this,'KRW-BTC')">BTC</div>
+      <div class="chip" onclick="pickChip(this,'KRW-ETH')">ETH</div>
+    </div>
+  </div>
+
+  <!-- ── 결과 패널 ── -->
+  <div class="result" id="result">
+
+    <!-- 가격 헤더 -->
+    <div class="price-header" id="priceHeader">
+      <div>
+        <div class="price-ticker" id="rTicker">-</div>
+        <div class="price-val" id="rPrice">-</div>
+        <div class="price-chg" id="rChg">-</div>
+      </div>
+      <div class="price-right">
+        <div class="price-pct" id="rPct">-</div>
+        <div class="vol-wrap">
+          <div class="vol-label">거래량</div>
+          <div class="vol-val" id="rVolRatio">-</div>
+          <div class="vol-sig" id="rVolSig">-</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 종합 점수 -->
+    <div class="verdict-card">
+      <div class="verdict-label">
+        <span>📊 기술적 종합 판정</span>
+        <span id="rIndCount">-</span>
+      </div>
+      <div class="verdict-score-row">
+        <div class="verdict-score-num" id="rScore">-</div>
+        <div class="verdict-right">
+          <div class="verdict-bar-bg">
+            <div class="verdict-bar-fill" id="rScoreBar" style="width:0%"></div>
+          </div>
+          <div class="verdict-text" id="rVerdict">-</div>
+          <div class="verdict-sub" id="rVerdictSub">-</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 손절/목표 -->
+    <div class="trade-row">
+      <div class="trade-card entry">
+        <div class="trade-lbl">진입가</div>
+        <div class="trade-val" id="rEntry">-</div>
+      </div>
+      <div class="trade-card target">
+        <div class="trade-lbl">🎯 목표가</div>
+        <div class="trade-val" id="rTarget">-</div>
+      </div>
+      <div class="trade-card stop">
+        <div class="trade-lbl">🛑 손절가</div>
+        <div class="trade-val" id="rStop">-</div>
+      </div>
+    </div>
+
+    <!-- 기술 지표 -->
+    <div>
+      <div class="section-title">📡 기술 지표 분석</div>
+      <div class="ind-list" id="rIndicators"></div>
+    </div>
+
+    <!-- 전설 트레이더 -->
+    <div>
+      <div class="section-title">🏆 전설 트레이더 분석</div>
+      <div class="legend-list" id="rLegends"></div>
+    </div>
+
+    <div class="footer-notice">
+      데이터: Yahoo Finance / Upbit · 일봉 기준 기술적 분석<br>
+      <span style="color:var(--red)">⚠ 투자 판단 참고용이며 수익을 보장하지 않습니다</span>
+    </div>
+
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+// PROXY FETCH — allorigins 레이스 후 codetabs fallback
+// ═══════════════════════════════════════════════════════════════
+async function fetchViaProxy(url, timeout = 10000) {
+  const PROXIES = [
+    u => ({ url: `https://api.allorigins.win/raw?url=${encodeURIComponent(u)}`, parse: r => r }),
+    u => ({ url: `https://api.allorigins.win/get?url=${encodeURIComponent(u)}`,  parse: r => r?.contents ? JSON.parse(r.contents) : null }),
+    u => ({ url: u, parse: r => r }),
+  ];
+  const tryProxy = async (fn) => {
+    const { url: pu, parse } = fn(url);
+    const ctrl = new AbortController();
+    const tid = setTimeout(() => ctrl.abort(), timeout);
+    try {
+      const r = await fetch(pu, { signal: ctrl.signal });
+      clearTimeout(tid);
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      const raw = await r.json();
+      const parsed = parse(raw);
+      if (!parsed) throw new Error('empty');
+      return parsed;
+    } catch (e) { clearTimeout(tid); throw e; }
+  };
+  try {
+    return await Promise.any(PROXIES.map(tryProxy));
+  } catch {
+    // codetabs fallback
+    try {
+      const fu = `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`;
+      const ctrl = new AbortController();
+      const tid = setTimeout(() => ctrl.abort(), timeout + 4000);
+      const r = await fetch(fu, { signal: ctrl.signal });
+      clearTimeout(tid);
+      if (!r.ok) throw new Error('codetabs fail');
+      return await r.json();
+    } catch { return null; }
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// OHLCV 데이터 조회 (1년치 일봉)
+// ═══════════════════════════════════════════════════════════════
+async function fetchOHLCV(ticker) {
+  // 업비트 (KRW-BTC 등)
+  if (ticker.startsWith('KRW-')) {
+    try {
+      const res = await fetch(
+        `https://api.upbit.com/v1/candles/days?market=${ticker}&count=200`,
+        { signal: AbortSignal.timeout(10000) }
+      );
+      const data = await res.json();
+      if (Array.isArray(data) && data.length >= 20) {
+        const rev = [...data].reverse();
+        return {
+          closes:  rev.map(d => d.trade_price),
+          highs:   rev.map(d => d.high_price),
+          lows:    rev.map(d => d.low_price),
+          volumes: rev.map(d => d.candle_acc_trade_volume),
+          price:     rev[rev.length - 1].trade_price,
+          prevClose: rev[rev.length - 2].trade_price,
+          currency: 'KRW',
+        };
+      }
+    } catch {}
+    return null;
+  }
+
+  // Yahoo Finance
+  for (const host of ['query1', 'query2']) {
+    const url = `https://${host}.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(ticker)}?interval=1d&range=1y`;
+    const data = await fetchViaProxy(url, 12000);
+    const result = data?.chart?.result?.[0];
+    if (!result) continue;
+    const meta = result.meta;
+    const q    = result.indicators?.quote?.[0];
+    if (!q) continue;
+    const n = Math.min(q.close?.length||0, q.high?.length||0, q.low?.length||0, q.volume?.length||0);
+    const valid = [];
+    for (let i = 0; i < n; i++) {
+      if (q.close[i] != null && q.high[i] != null && q.low[i] != null && q.volume[i] != null)
+        valid.push({ c: q.close[i], h: q.high[i], l: q.low[i], v: q.volume[i] });
+    }
+    if (valid.length < 20) continue;
+    return {
+      closes:  valid.map(d => d.c),
+      highs:   valid.map(d => d.h),
+      lows:    valid.map(d => d.l),
+      volumes: valid.map(d => d.v),
+      price:     meta.regularMarketPrice || valid[valid.length - 1].c,
+      prevClose: meta.previousClose || meta.chartPreviousClose || valid[valid.length - 2].c,
+      currency: meta.currency,
+    };
+  }
+  return null;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 기술 지표 계산
+// ═══════════════════════════════════════════════════════════════
+function calcRSI(closes, period = 14) {
+  if (closes.length < period + 2) return null;
+  let avgG = 0, avgL = 0;
+  for (let i = 1; i <= period; i++) {
+    const d = closes[i] - closes[i - 1];
+    if (d > 0) avgG += d; else avgL -= d;
+  }
+  avgG /= period; avgL /= period;
+  for (let i = period + 1; i < closes.length; i++) {
+    const d = closes[i] - closes[i - 1];
+    avgG = (avgG * (period - 1) + Math.max(d,  0)) / period;
+    avgL = (avgL * (period - 1) + Math.max(-d, 0)) / period;
+  }
+  return avgL === 0 ? 100 : 100 - 100 / (1 + avgG / avgL);
+}
+
+function calcMACD(closes) {
+  if (closes.length < 36) return null;
+  const emaArr = (data, p) => {
+    const k = 2 / (p + 1), r = [data[0]];
+    for (let i = 1; i < data.length; i++) r.push(data[i] * k + r[i - 1] * (1 - k));
+    return r;
+  };
+  const e12 = emaArr(closes, 12), e26 = emaArr(closes, 26);
+  const macdLine = e12.map((v, i) => v - e26[i]).slice(25);
+  const sigArr   = emaArr(macdLine, 9);
+  const macd     = macdLine[macdLine.length - 1];
+  const sig      = sigArr[sigArr.length - 1];
+  const hist     = macd - sig;
+  const prevHist = macdLine[macdLine.length - 2] - sigArr[sigArr.length - 2];
+  return { macd, signal: sig, hist, prevHist, rising: hist > prevHist };
+}
+
+function calcBB(closes, period = 20, mult = 2) {
+  if (closes.length < period) return null;
+  const sl  = closes.slice(-period);
+  const ma  = sl.reduce((a, b) => a + b, 0) / period;
+  const std = Math.sqrt(sl.reduce((a, b) => a + (b - ma) ** 2, 0) / period);
+  const upper = ma + mult * std, lower = ma - mult * std;
+  const price = closes[closes.length - 1];
+  const pct   = upper > lower ? (price - lower) / (upper - lower) : 0.5;
+  return { upper, lower, mid: ma, price, pct };
+}
+
+function calcStoch(highs, lows, closes, kP = 14, dP = 3) {
+  if (closes.length < kP + dP) return null;
+  const kVals = [];
+  for (let i = closes.length - dP; i < closes.length; i++) {
+    const h = Math.max(...highs.slice(i - kP + 1, i + 1));
+    const l = Math.min(...lows.slice(i - kP + 1,  i + 1));
+    kVals.push(h > l ? (closes[i] - l) / (h - l) * 100 : 50);
+  }
+  return { k: kVals[kVals.length - 1], d: kVals.reduce((a, b) => a + b, 0) / kVals.length };
+}
+
+function calcWR(highs, lows, closes, period = 14) {
+  if (closes.length < period) return null;
+  const hh = Math.max(...highs.slice(-period));
+  const ll = Math.min(...lows.slice(-period));
+  return hh > ll ? (hh - closes[closes.length - 1]) / (hh - ll) * -100 : -50;
+}
+
+function calcATR(highs, lows, closes, period = 14) {
+  if (closes.length < period + 1) return null;
+  const trs = [];
+  for (let i = closes.length - period; i < closes.length; i++) {
+    trs.push(Math.max(
+      highs[i] - lows[i],
+      Math.abs(highs[i] - closes[i - 1]),
+      Math.abs(lows[i]  - closes[i - 1])
+    ));
+  }
+  return trs.reduce((a, b) => a + b, 0) / period;
+}
+
+function calcEMA(closes, period) {
+  if (closes.length < period) return null;
+  const k = 2 / (period + 1);
+  let ema = closes.slice(0, period).reduce((a, b) => a + b, 0) / period;
+  for (let i = period; i < closes.length; i++) ema = closes[i] * k + ema * (1 - k);
+  return ema;
+}
+
+function calcVolRatio(volumes, period = 20) {
+  if (volumes.length < period + 1) return null;
+  const avg = volumes.slice(-period - 1, -1).reduce((a, b) => a + b, 0) / period;
+  return avg > 0 ? volumes[volumes.length - 1] / avg : null;
+}
+
+// ── 종합 기술 신호 ──────────────────────────────────────────
+function calcTechSignal(ohlcv) {
+  const { closes, highs, lows, volumes, price, prevClose } = ohlcv;
+
+  const rsi   = calcRSI(closes);
+  const macd  = calcMACD(closes);
+  const bb    = calcBB(closes);
+  const stoch = calcStoch(highs, lows, closes);
+  const wr    = calcWR(highs, lows, closes);
+  const atr   = calcATR(highs, lows, closes);
+  const ema9  = calcEMA(closes, 9);
+  const ema20 = calcEMA(closes, 20);
+  const ema50 = calcEMA(closes, 50);
+  const ema200= calcEMA(closes, 200);
+  const volR  = calcVolRatio(volumes);
+
+  const indicators = [];
+  let totalScore = 0, totalWeight = 0;
+
+  const add = (name, value, signal, score, weight) => {
+    indicators.push({ name, value, signal, score });
+    totalScore  += score * weight;
+    totalWeight += weight;
+  };
+
+  // RSI
+  if (rsi != null) {
+    const r = Math.round(rsi);
+    const [sig, sc] = r >= 80 ? ['과매수 ⚠️', -2]
+      : r >= 65 ? ['고점권', -1]
+      : r >= 55 ? ['상승 유지', 0.5]
+      : r >= 45 ? ['중립 구간', 0]
+      : r >= 35 ? ['약세 국면', -0.5]
+      : r >= 25 ? ['과매도 🔔', 1.5]
+      : ['극단 과매도 🔥', 2];
+    add('RSI (14)', r, sig, sc, 2.5);
+  }
+
+  // MACD
+  if (macd) {
+    const [sig, sc] = macd.hist > 0 && macd.rising  ? ['히스토그램 상승 확장 🟢', 2]
+      : macd.hist > 0 && !macd.rising ? ['상승 모멘텀 약화 🟡', 0.5]
+      : macd.hist < 0 && !macd.rising ? ['히스토그램 하락 확장 🔴', -2]
+      : ['하락 완화 중 🟡', -0.3];
+    add('MACD (12·26·9)', macd.hist.toFixed(3), sig, sc, 2.5);
+  }
+
+  // Bollinger Band
+  if (bb) {
+    const p = bb.pct;
+    const [sig, sc] = p >= 1.0  ? ['상단 이탈 ⚠️', -2]
+      : p >= 0.80 ? ['상단 근처', -1]
+      : p >= 0.50 ? ['중간 위', 0.3]
+      : p >= 0.20 ? ['중간 아래', -0.3]
+      : p >= 0.00 ? ['하단 근처 🔔', 1.5]
+      : ['하단 이탈 🔥', 2];
+    add('볼린저 밴드 위치', (p * 100).toFixed(0) + '%', sig, sc, 2);
+  }
+
+  // Stochastic
+  if (stoch) {
+    const k = Math.round(stoch.k), d = Math.round(stoch.d);
+    const [sig, sc] = k >= 80 && k < d ? ['고점 하락전환 ⚠️', -2]
+      : k >= 80 ? ['과매수권', -1]
+      : k <= 20 && k > d ? ['저점 상승전환 🔥', 2]
+      : k <= 20 ? ['과매도권 🔔', 1.5]
+      : ['중립', 0];
+    add('스토캐스틱', `K:${k} D:${d}`, sig, sc, 1.5);
+  }
+
+  // Williams %R
+  if (wr != null) {
+    const w = Math.round(wr);
+    const [sig, sc] = w >= -20 ? ['과매수 ⚠️', -1.5]
+      : w >= -40 ? ['고점권', -0.5]
+      : w >= -60 ? ['중립', 0]
+      : w >= -80 ? ['저점권 🔔', 0.5]
+      : ['극단 과매도 🔥', 1.5];
+    add('Williams %R', w, sig, sc, 1.5);
+  }
+
+  // EMA Trend (+ EMA200 when available)
+  if (ema9 && ema20 && ema50) {
+    const allUp    = price > ema9 && ema9 > ema20 && ema20 > ema50;
+    const allDown  = price < ema9 && ema9 < ema20 && ema20 < ema50;
+    const above200 = ema200 != null ? price > ema200 : null;
+    const vs20     = ((price - ema20) / ema20 * 100).toFixed(1);
+    const ma200txt = ema200 ? ` | 200MA ${((price - ema200) / ema200 * 100).toFixed(1)}%` : '';
+    const [sig, sc] = allUp && above200 === true  ? ['완벽 정배열 + 200MA 위 🟢', 2]
+      : allUp && above200 === false ? ['정배열이나 200MA 아래', 1.2]
+      : allUp   ? ['완벽 정배열 🟢', 1.8]
+      : price > ema20 ? ['단기 상승', 1]
+      : price > ema50 ? ['중기 지지선 위', 0.5]
+      : allDown && above200 === false ? ['역배열 + 200MA 붕괴 🔴', -2]
+      : allDown ? ['완전 역배열 🔴', -1.8]
+      : ['하락 국면', -1];
+    add('이동평균 추세', `MA20 대비 ${vs20}%${ma200txt}`, sig, sc, 2.5);
+  }
+
+  // Volume
+  if (volR != null) {
+    const up = price >= prevClose;
+    const [sig, sc] = volR >= 2.0 && up   ? ['거래량 폭발 + 상승 🔥', 2]
+      : volR >= 1.5 && up   ? ['거래량 급증 상승 🟢', 1.5]
+      : volR >= 2.0 && !up  ? ['거래량 폭발 + 하락 ⚠️', -2]
+      : volR >= 1.5 && !up  ? ['거래량 동반 하락 🔴', -1.5]
+      : volR >= 1.2          ? [up ? '평균 이상 매수' : '평균 이상 매도', up ? 0.5 : -0.5]
+      : ['거래량 부족 (신호 약)', 0];
+    add('거래량 비율', `${volR.toFixed(1)}x`, sig, sc, 1.5);
+  }
+
+  const finalScore = totalWeight > 0 ? totalScore / totalWeight : 0; // -2 ~ +2
+  const norm = Math.round((finalScore + 2) / 4 * 100);              // 0 ~ 100
+
+  let verdict, verdictColor, verdictSub;
+  if      (finalScore >=  1.5) { verdict = '🔥 강력 매수'; verdictColor = 'var(--green2)'; verdictSub = '대부분 지표 매수 신호 일치'; }
+  else if (finalScore >=  0.8) { verdict = '📈 매수 신호'; verdictColor = 'var(--green)';  verdictSub = '매수 지표 우세'; }
+  else if (finalScore >=  0.2) { verdict = '🟡 약한 매수'; verdictColor = 'var(--yellow)'; verdictSub = '매수 우위이나 확인 필요'; }
+  else if (finalScore >= -0.2) { verdict = '⏳ 중립 관망'; verdictColor = 'var(--text2)';  verdictSub = '방향 불명확, 기다리는 게 최선'; }
+  else if (finalScore >= -0.8) { verdict = '🟡 약한 매도'; verdictColor = 'var(--orange)'; verdictSub = '매도 우위, 주의'; }
+  else if (finalScore >= -1.5) { verdict = '📉 매도 신호'; verdictColor = 'var(--red2)';   verdictSub = '매도 지표 우세'; }
+  else                         { verdict = '🚨 강력 매도'; verdictColor = 'var(--red)';    verdictSub = '대부분 지표 매도 신호'; }
+
+  // ATR 기반 손절/목표 (R:R = 1:2)
+  const target   = atr ? price + atr * 2.0 : null;
+  const stopLoss = atr ? price - atr * 1.0 : null;
+
+  // ── 전설 트레이더 의견 ─────────────────────────────────────
+  const legends = [];
+
+  if (ema9 && ema20 && ema50) {
+    const allUp    = price > ema9 && ema9 > ema20 && ema20 > ema50;
+    const allDn    = price < ema9 && ema9 < ema20 && ema20 < ema50;
+    const above200 = ema200 != null ? price > ema200 : null;
+    legends.push({
+      name: 'Jesse Livermore', tool: '추세 추종 (이동평균)',
+      opinion: allUp && above200 === true  ? '완벽 정배열 + 200MA 위. 지금이 최고의 매수 조건이다 — 추세에 올라타라'
+        : allUp && above200 === false ? '단기 정배열이지만 200MA 아래. 반등 가능하나 큰 그림은 약세'
+        : allUp   ? '완벽한 정배열. 추세에 올라타라 — 매수 조건 충족'
+        : allDn && above200 === false ? '완전 역배열 + 200MA 붕괴. 추세를 거스르지 마라 — 절대 진입 금지'
+        : allDn   ? '완전 역배열. 추세를 거스르지 마라 — 절대 진입 금지'
+        : price > ema50 ? '중기 추세는 살아있다. 눌림목에서 기회를 잡아라'
+        : '중기 추세 아래. 리스크가 크다, 관망하라',
+      score: allUp && above200 === true ? 2 : allUp ? 1.8
+        : allDn && above200 === false ? -2 : allDn ? -1.8
+        : price > ema50 ? 0.8 : -0.8
+    });
+  }
+
+  if (macd) {
+    legends.push({
+      name: 'Gerald Appel', tool: 'MACD',
+      opinion: macd.hist > 0 && macd.rising  ? '모멘텀 상승 확장 중. 매수 진입 적기다 — 추세가 살아있다'
+        : macd.hist > 0 ? '상승 중이나 모멘텀이 약해지고 있다. 보수적으로 접근하라'
+        : macd.hist < 0 && !macd.rising ? '하락 추세 지속 중. 절대로 저점 잡기 시도하지 마라'
+        : '하락 감소 중. 반등 초기 징후이나 아직 확신 없음',
+      score: macd.hist > 0 && macd.rising ? 2 : macd.hist > 0 ? 0.5 : macd.hist < 0 && !macd.rising ? -2 : -0.3
+    });
+  }
+
+  if (rsi != null) {
+    const r = Math.round(rsi);
+    legends.push({
+      name: 'Welles Wilder', tool: 'RSI (14)',
+      opinion: r >= 70 ? `RSI ${r} — 과매수 구간이다. 지금 사면 고점 매수, 위험하다`
+        : r <= 30 ? `RSI ${r} — 극단 과매도. 반등 준비 구간, 소량 분할 진입 고려`
+        : r >= 55 ? `RSI ${r} — 상승 모멘텀 유지. 추세 타는 중`
+        : `RSI ${r} — 방향성 탐색 중. 확인 후 진입`,
+      score: r >= 70 ? -1.5 : r <= 30 ? 1.5 : r >= 55 ? 0.5 : -0.2
+    });
+  }
+
+  if (bb) {
+    legends.push({
+      name: 'John Bollinger', tool: '볼린저 밴드',
+      opinion: bb.pct <= 0.05 ? '밴드 하단 이탈 — 강한 반등 가능. 역발상 매수 고려하라'
+        : bb.pct <= 0.20 ? '밴드 하단 근처 — 과매도 반등 구간. 소량 진입 고려'
+        : bb.pct >= 0.95 ? '밴드 상단 이탈 — 과매수, 지금 사지 마라'
+        : bb.pct >= 0.80 ? '밴드 상단 근처 — 차익 실현을 고려할 시점'
+        : '밴드 중간 구간 — 특별한 신호 없음',
+      score: bb.pct <= 0.05 ? 2 : bb.pct <= 0.2 ? 1 : bb.pct >= 0.95 ? -2 : bb.pct >= 0.8 ? -1 : 0
+    });
+  }
+
+  if (wr != null) {
+    const w = Math.round(wr);
+    legends.push({
+      name: 'Larry Williams', tool: 'Williams %R',
+      opinion: w >= -20 ? `%R ${w} — 과매수 영역이다. 단기 조정 올 수 있다`
+        : w <= -80 ? `%R ${w} — 과매도 극단. 반등 임박 가능성 높다`
+        : w <= -60 ? `%R ${w} — 저점권 진입. 관심 구간`
+        : `%R ${w} — 중립 구간, 방향 확인 필요`,
+      score: w >= -20 ? -1.5 : w <= -80 ? 1.5 : w <= -60 ? 0.5 : 0
+    });
+  }
+
+  if (volR != null) {
+    legends.push({
+      name: "William O'Neil", tool: 'CAN SLIM 거래량',
+      opinion: volR >= 1.5 && price >= prevClose
+        ? `거래량 ${volR.toFixed(1)}배 + 상승 — 기관 매수 확인. 진입 조건 충족`
+        : volR >= 1.5 && price < prevClose
+        ? `거래량 ${volR.toFixed(1)}배 + 하락 — 기관 매도 압력. 위험하다`
+        : volR < 0.7
+        ? `거래량 부족 (${volR.toFixed(1)}x) — 신호 신뢰도 낮다, 확인 필요`
+        : `거래량 보통 (${volR.toFixed(1)}x) — 추가 확인 후 진입`,
+      score: volR >= 1.5 && price >= prevClose ? 1.5 : volR >= 1.5 ? -1.5 : 0
+    });
+  }
+
+  return { indicators, legends, finalScore, norm, verdict, verdictColor, verdictSub,
+           atr, price, target, stopLoss, volR };
+}
+
+// ═══════════════════════════════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════════════════════════════
+function setEl(id, val) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = val;
+}
+
+function setBar(id, pct, color) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.style.width = Math.max(0, Math.min(100, pct)) + '%';
+  if (color) el.style.background = color;
+}
+
+function fmtChg(price, prev) {
+  if (!price || !prev) return { chg: '-', pct: '-', cls: 'muted' };
+  const d   = price - prev;
+  const p   = d / prev * 100;
+  const cls = d >= 0 ? 'up' : 'dn';
+  return {
+    chg: (d >= 0 ? '+' : '') + d.toFixed(2),
+    pct: (p >= 0 ? '+' : '') + p.toFixed(2) + '%',
+    cls
+  };
+}
+
+let _toastTimer;
+function toast(msg, dur = 3000) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(_toastTimer);
+  _toastTimer = setTimeout(() => el.classList.remove('show'), dur);
+}
+
+function setLoading(ticker, show) {
+  const ov = document.getElementById('loadingOverlay');
+  setEl('loadingTicker', ticker);
+  setEl('loadingMsg', show ? '1년치 데이터 수집 중...' : '');
+  ov.classList.toggle('show', show);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// CHIP SELECT
+// ═══════════════════════════════════════════════════════════════
+function pickChip(el, ticker) {
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('tickerInput').value = ticker;
+  analyze();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// MAIN ANALYZE
+// ═══════════════════════════════════════════════════════════════
+async function analyze() {
+  const raw = document.getElementById('tickerInput').value.trim().toUpperCase();
+  if (!raw) return;
+
+  const btn = document.getElementById('analyzeBtn');
+  btn.disabled = true;
+  document.getElementById('result').classList.remove('visible');
+  setLoading(raw, true);
+
+  try {
+    const ohlcv = await fetchOHLCV(raw);
+    if (!ohlcv || !ohlcv.price) {
+      toast(`⚠️ ${raw} 데이터 조회 실패 — 티커를 확인해주세요`);
+      return;
+    }
+
+    const { chg, pct, cls } = fmtChg(ohlcv.price, ohlcv.prevClose);
+    const isCoin = raw.startsWith('KRW-');
+    const fmt = isCoin
+      ? v => Math.round(v).toLocaleString('ko-KR') + '원'
+      : v => v.toLocaleString(undefined, { maximumFractionDigits: 2 });
+
+    const tech = calcTechSignal(ohlcv);
+
+    // ── 가격 헤더 ──
+    setEl('rTicker', raw);
+    const priceEl = document.getElementById('rPrice');
+    if (priceEl) { priceEl.textContent = fmt(ohlcv.price); priceEl.className = 'price-val ' + cls; }
+    const chgEl = document.getElementById('rChg');
+    if (chgEl) { chgEl.textContent = `전일 대비 ${chg}`; chgEl.className = 'price-chg ' + cls; }
+    const pctEl = document.getElementById('rPct');
+    if (pctEl) { pctEl.textContent = pct; pctEl.className = 'price-pct ' + cls; }
+
+    // 거래량
+    if (tech.volR != null) {
+      const vrEl = document.getElementById('rVolRatio');
+      if (vrEl) {
+        vrEl.textContent = tech.volR.toFixed(1) + 'x';
+        vrEl.className = 'vol-val ' + (tech.volR >= 1.5
+          ? (ohlcv.price >= ohlcv.prevClose ? 'up' : 'dn')
+          : 'muted');
+      }
+      setEl('rVolSig', tech.volR >= 2 ? '거래량 폭발' : tech.volR >= 1.5 ? '거래량 급증' : tech.volR < 0.7 ? '거래량 부족' : '평균 수준');
+    } else {
+      setEl('rVolRatio', '-'); setEl('rVolSig', '');
+    }
+
+    // 헤더 top bar 색
+    const ph = document.getElementById('priceHeader');
+    if (ph) ph.style.setProperty('--accent', tech.finalScore >= 0.2 ? 'var(--green)' : tech.finalScore <= -0.2 ? 'var(--red)' : 'var(--yellow)');
+
+    // ── 종합 점수 ──
+    const scoreEl = document.getElementById('rScore');
+    if (scoreEl) { scoreEl.textContent = tech.norm; scoreEl.style.color = tech.verdictColor; }
+    const barColor = tech.norm >= 65 ? 'var(--green)' : tech.norm >= 50 ? 'var(--yellow)' : tech.norm >= 35 ? 'var(--orange)' : 'var(--red)';
+    setBar('rScoreBar', tech.norm, barColor);
+    const vEl = document.getElementById('rVerdict');
+    if (vEl) { vEl.textContent = tech.verdict; vEl.style.color = tech.verdictColor; }
+    setEl('rVerdictSub', tech.verdictSub);
+    setEl('rIndCount', `${tech.indicators.length}개 지표 분석`);
+
+    // ── 손절/목표 ──
+    if (tech.target && tech.stopLoss > 0) {
+      setEl('rEntry',  fmt(ohlcv.price));
+      setEl('rTarget', `${fmt(tech.target)} (+${((tech.target / ohlcv.price - 1) * 100).toFixed(1)}%)`);
+      setEl('rStop',   `${fmt(tech.stopLoss)} (-${((1 - tech.stopLoss / ohlcv.price) * 100).toFixed(1)}%)`);
+    } else {
+      setEl('rEntry', fmt(ohlcv.price));
+      setEl('rTarget', '데이터 부족');
+      setEl('rStop',   '데이터 부족');
+    }
+
+    // ── 기술 지표 목록 ──
+    const indEl = document.getElementById('rIndicators');
+    if (indEl) {
+      indEl.innerHTML = tech.indicators.map(ind => {
+        const sc  = ind.score;
+        const bw  = Math.round((sc + 2) / 4 * 100);
+        const bc  = sc >= 1 ? 'var(--green)' : sc >= 0.2 ? 'var(--yellow)' : sc >= -0.2 ? 'var(--text3)' : sc >= -1 ? 'var(--orange)' : 'var(--red)';
+        return `<div class="ind-row">
+          <div class="ind-name">${ind.name}</div>
+          <div class="ind-val" style="color:${bc}">${ind.value}</div>
+          <div class="ind-bar-wrap"><div class="ind-bar-bg"><div class="ind-bar-fill" style="width:${bw}%;background:${bc}"></div></div></div>
+          <div class="ind-sig">${ind.signal}</div>
+        </div>`;
+      }).join('');
+    }
+
+    // ── 전설 트레이더 ──
+    const legEl = document.getElementById('rLegends');
+    if (legEl) {
+      legEl.innerHTML = tech.legends.map(leg => {
+        const sc   = leg.score;
+        const bc   = sc >= 1 ? 'var(--green)' : sc >= 0.2 ? 'var(--yellow)' : sc >= -0.2 ? 'var(--text3)' : sc >= -1 ? 'var(--orange)' : 'var(--red)';
+        const icon = sc >= 1.5 ? '🔥' : sc >= 0.5 ? '📈' : sc >= -0.5 ? '🟡' : sc >= -1.5 ? '📉' : '🚨';
+        return `<div class="legend-card" style="border-left-color:${bc}">
+          <div class="legend-top">
+            <span class="legend-icon">${icon}</span>
+            <span class="legend-name">${leg.name}</span>
+            <span class="legend-tool">${leg.tool}</span>
+          </div>
+          <div class="legend-opinion">${leg.opinion}</div>
+        </div>`;
+      }).join('');
+    }
+
+    document.getElementById('result').classList.add('visible');
+    toast(`✅ ${raw} 분석 완료`);
+
+  } catch (e) {
+    toast(`⚠️ 분석 중 오류 발생`);
+    console.error(e);
+  } finally {
+    btn.disabled = false;
+    setLoading('', false);
+  }
+}
+</script>
+</body>
+</html>
