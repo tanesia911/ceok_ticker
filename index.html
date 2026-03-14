@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
@@ -26,287 +27,293 @@ html{font-size:14px}
 
 /* ═══ CRT BASE ═══ */
 body{
-  background:var(--BG);
-  color:var(--G);
-  font-family:var(--MONO);
-  min-height:100dvh;
-  max-width:600px;
-  margin:0 auto;
-  position:relative;
-  padding-top:env(safe-area-inset-top);
-  padding-bottom:calc(env(safe-area-inset-bottom)+20px);
-  -webkit-tap-highlight-color:transparent;
-  text-shadow:0 0 5px rgba(0,255,65,.3);
+background:var(–BG);
+color:var(–G);
+font-family:var(–MONO);
+min-height:100dvh;
+max-width:600px;
+margin:0 auto;
+position:relative;
+padding-top:env(safe-area-inset-top);
+padding-bottom:calc(env(safe-area-inset-bottom)+20px);
+-webkit-tap-highlight-color:transparent;
+text-shadow:0 0 5px rgba(0,255,65,.3);
 }
 
 /* CRT scanlines — pointer-events:none 으로 클릭 통과 */
 body::before{
-  content:'';
-  position:fixed;inset:0;
-  pointer-events:none;
-  z-index:8000;
-  background:repeating-linear-gradient(
-    0deg,
-    transparent,transparent 2px,
-    rgba(0,0,0,.22) 2px,rgba(0,0,0,.22) 4px
-  );
+content:’’;
+position:fixed;inset:0;
+pointer-events:none;
+z-index:8000;
+background:repeating-linear-gradient(
+0deg,
+transparent,transparent 2px,
+rgba(0,0,0,.22) 2px,rgba(0,0,0,.22) 4px
+);
 }
 /* CRT vignette */
 body::after{
-  content:'';
-  position:fixed;inset:0;
-  pointer-events:none;
-  z-index:8001;
-  background:radial-gradient(ellipse at 50% 50%,transparent 55%,rgba(0,0,0,.65) 100%);
+content:’’;
+position:fixed;inset:0;
+pointer-events:none;
+z-index:8001;
+background:radial-gradient(ellipse at 50% 50%,transparent 55%,rgba(0,0,0,.65) 100%);
 }
 
 /* ═══ CURSOR ═══ */
 @keyframes blink{0%,49%{opacity:1}50%,100%{opacity:0}}
 .cur{
-  display:inline-block;width:8px;height:.9em;
-  background:var(--G);vertical-align:text-bottom;
-  animation:blink .8s step-end infinite;
-  margin-left:2px;text-shadow:none;
-  box-shadow:0 0 6px var(--G);
+display:inline-block;width:8px;height:.9em;
+background:var(–G);vertical-align:text-bottom;
+animation:blink .8s step-end infinite;
+margin-left:2px;text-shadow:none;
+box-shadow:0 0 6px var(–G);
 }
-.cur-a{background:var(--A);box-shadow:0 0 6px var(--A)}
+.cur-a{background:var(–A);box-shadow:0 0 6px var(–A)}
 
 /* ═══ HEADER ═══ */
 .hdr{
-  display:flex;justify-content:space-between;align-items:flex-start;
-  padding:9px 12px 8px;
-  border-bottom:1px solid var(--G3);
-  position:sticky;top:0;background:var(--BG);z-index:500;
+display:flex;justify-content:space-between;align-items:flex-start;
+padding:9px 12px 8px;
+border-bottom:1px solid var(–G3);
+position:sticky;top:0;background:var(–BG);z-index:500;
 }
 .hdr-l{}
 .hdr-logo{font-size:19px;letter-spacing:.18em;line-height:1}
-.hdr-logo b{color:var(--A);font-weight:400}
-.hdr-sub{font-size:8px;color:var(--G3);letter-spacing:.18em;margin-top:3px}
+.hdr-logo b{color:var(–A);font-weight:400}
+.hdr-sub{font-size:8px;color:var(–G3);letter-spacing:.18em;margin-top:3px}
 .hdr-r{text-align:right}
 .hdr-time{font-size:12px;letter-spacing:.06em}
-.hdr-dot{font-size:8px;color:var(--G3);letter-spacing:.1em;margin-top:3px}
-.hdr-dot span{color:var(--G);animation:blink 1.4s step-end infinite}
+.hdr-dot{font-size:8px;color:var(–G3);letter-spacing:.1em;margin-top:3px}
+.hdr-dot span{color:var(–G);animation:blink 1.4s step-end infinite}
 
 /* ═══ CLI BLOCK ═══ */
-.cli{padding:9px 12px 8px;border-bottom:1px solid var(--G3)}
+.cli{padding:9px 12px 8px;border-bottom:1px solid var(–G3)}
 .cli-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
-.prompt{font-size:14px;color:var(--A);flex-shrink:0;white-space:nowrap}
+.prompt{font-size:14px;color:var(–A);flex-shrink:0;white-space:nowrap}
 input{
-  flex:1;background:transparent;border:none;
-  border-bottom:1px solid var(--G3);
-  color:var(--G);font-family:var(--MONO);font-size:16px;
-  letter-spacing:.1em;padding:5px 4px 4px;
-  outline:none;text-transform:uppercase;
-  caret-color:var(--G);min-height:34px;
-  text-shadow:0 0 5px rgba(0,255,65,.35);
+flex:1;background:transparent;border:none;
+border-bottom:1px solid var(–G3);
+color:var(–G);font-family:var(–MONO);font-size:16px;
+letter-spacing:.1em;padding:5px 4px 4px;
+outline:none;text-transform:uppercase;
+caret-color:var(–G);min-height:34px;
+text-shadow:0 0 5px rgba(0,255,65,.35);
 }
-input::placeholder{color:var(--G3);font-size:12px;letter-spacing:.08em}
-input:focus{border-bottom-color:var(--G2)}
+input::placeholder{color:var(–G3);font-size:12px;letter-spacing:.08em}
+input:focus{border-bottom-color:var(–G2)}
 .btn-run{
-  background:transparent;border:1px solid var(--G3);
-  color:var(--G3);font-family:var(--MONO);font-size:12px;
-  letter-spacing:.15em;padding:6px 12px;cursor:pointer;
-  min-height:34px;transition:all .12s;flex-shrink:0;
+background:transparent;border:1px solid var(–G3);
+color:var(–G3);font-family:var(–MONO);font-size:12px;
+letter-spacing:.15em;padding:6px 12px;cursor:pointer;
+min-height:34px;transition:all .12s;flex-shrink:0;
 }
-.btn-run::before{content:'> ';color:var(--A)}
-.btn-run:hover{border-color:var(--G);color:var(--G);text-shadow:0 0 5px rgba(0,255,65,.4)}
+.btn-run::before{content:’> ’;color:var(–A)}
+.btn-run:hover{border-color:var(–G);color:var(–G);text-shadow:0 0 5px rgba(0,255,65,.4)}
 .btn-run:active{filter:brightness(.75)}
-.btn-run:disabled{border-color:var(--G4);color:var(--G4);cursor:not-allowed}
+.btn-run:disabled{border-color:var(–G4);color:var(–G4);cursor:not-allowed}
 .chips{display:flex;flex-wrap:wrap;gap:4px}
 .chip{
-  font-size:10px;letter-spacing:.08em;padding:3px 8px;
-  border:1px solid var(--G3);color:var(--G3);
-  cursor:pointer;user-select:none;transition:all .1s;text-transform:uppercase;
+font-size:10px;letter-spacing:.08em;padding:3px 8px;
+border:1px solid var(–G3);color:var(–G3);
+cursor:pointer;user-select:none;transition:all .1s;text-transform:uppercase;
 }
-.chip:hover{border-color:var(--G2);color:var(--G2)}
-.chip.on{background:var(--G);border-color:var(--G);color:var(--BG);text-shadow:none}
+.chip:hover{border-color:var(–G2);color:var(–G2)}
+.chip.on{background:var(–G);border-color:var(–G);color:var(–BG);text-shadow:none}
+.chip-sep{
+font-size:8px;color:var(–G3);letter-spacing:.18em;
+padding:5px 2px 3px;width:100%;
+}
 
 /* ═══ COMMAND LOG ═══ */
-.log-wrap{border-bottom:1px solid var(--G3)}
+.log-wrap{border-bottom:1px solid var(–G3)}
 .log-hdr{
-  padding:4px 12px;background:var(--G4);border-bottom:1px solid var(--G3);
-  font-size:8px;letter-spacing:.22em;color:var(--G3);
+padding:4px 12px;background:var(–G4);border-bottom:1px solid var(–G3);
+font-size:8px;letter-spacing:.22em;color:var(–G3);
 }
-.log-hdr::before{content:'// '}
+.log-hdr::before{content:’// ‘}
 .log-body{
-  max-height:90px;overflow-y:auto;padding:5px 12px;
-  background:var(--BG1);
-  scrollbar-width:thin;scrollbar-color:var(--G3) transparent;
+max-height:90px;overflow-y:auto;padding:5px 12px;
+background:var(–BG1);
+scrollbar-width:thin;scrollbar-color:var(–G3) transparent;
 }
 .ll{font-size:10px;letter-spacing:.04em;padding:1px 0;line-height:1.6;white-space:pre}
-.ll::before{content:'> '}
-.ll.ok{color:var(--G)}
-.ll.info{color:var(--G3)}
-.ll.warn{color:var(--A);text-shadow:0 0 5px rgba(255,170,0,.4)}
-.ll.err{color:var(--R);text-shadow:0 0 5px rgba(255,32,32,.4)}
+.ll::before{content:’> ’}
+.ll.ok{color:var(–G)}
+.ll.info{color:var(–G3)}
+.ll.warn{color:var(–A);text-shadow:0 0 5px rgba(255,170,0,.4)}
+.ll.err{color:var(–R);text-shadow:0 0 5px rgba(255,32,32,.4)}
 
 /* ═══ RESULT ═══ */
 .result{display:none}
 .result.on{display:block}
 
 /* ═══ PRICE ═══ */
-.p-sec{padding:10px 12px 8px;border-bottom:1px solid var(--G3)}
+.p-sec{padding:10px 12px 8px;border-bottom:1px solid var(–G3)}
 .p-top{display:flex;justify-content:space-between;margin-bottom:5px}
-.p-sym{font-size:11px;letter-spacing:.22em;color:var(--A)}
-.p-src{font-size:8px;color:var(--G3);letter-spacing:.08em;margin-top:2px}
+.p-sym{font-size:11px;letter-spacing:.22em;color:var(–A)}
+.p-src{font-size:8px;color:var(–G3);letter-spacing:.08em;margin-top:2px}
 .p-vr{text-align:right}
-.vr-lbl{font-size:8px;color:var(--G3);letter-spacing:.15em}
+.vr-lbl{font-size:8px;color:var(–G3);letter-spacing:.15em}
 .vr-val{font-size:14px;letter-spacing:.05em}
-.vr-note{font-size:9px;color:var(--G3)}
+.vr-note{font-size:9px;color:var(–G3)}
 .p-main{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:3px}
 .p-price{font-size:34px;letter-spacing:-.01em;line-height:1}
 .p-pct{font-size:21px;line-height:1;text-align:right}
-.p-chg{font-size:10px;color:var(--G3);letter-spacing:.03em}
-.cg{color:var(--G);text-shadow:0 0 7px rgba(0,255,65,.45)}
-.cr{color:var(--R);text-shadow:0 0 7px rgba(255,32,32,.45)}
-.ca{color:var(--A);text-shadow:0 0 7px rgba(255,170,0,.45)}
+.p-chg{font-size:10px;color:var(–G3);letter-spacing:.03em}
+.cg{color:var(–G);text-shadow:0 0 7px rgba(0,255,65,.45)}
+.cr{color:var(–R);text-shadow:0 0 7px rgba(255,32,32,.45)}
+.ca{color:var(–A);text-shadow:0 0 7px rgba(255,170,0,.45)}
 
 /* ═══ SCORE ═══ */
-.sc-sec{display:flex;border-bottom:1px solid var(--G3)}
+.sc-sec{display:flex;border-bottom:1px solid var(–G3)}
 .sc-l{
-  padding:11px 12px;border-right:1px solid var(--G3);
-  background:var(--BG1);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  min-width:88px;
+padding:11px 12px;border-right:1px solid var(–G3);
+background:var(–BG1);
+display:flex;flex-direction:column;align-items:center;justify-content:center;
+min-width:88px;
 }
 .sc-num{font-size:40px;line-height:1;letter-spacing:-.02em}
 .sc-unit{font-size:11px;letter-spacing:.1em;opacity:.6;margin-top:1px}
 .sc-r{flex:1;padding:10px 12px;display:flex;flex-direction:column;justify-content:center;gap:8px}
-.bar-bg{height:3px;background:var(--G4)}
+.bar-bg{height:3px;background:var(–G4)}
 .bar-fill{height:100%;transition:width .55s;box-shadow:0 0 5px currentColor}
 .verdict{font-size:15px;letter-spacing:.07em}
-.v-note{font-size:10px;color:var(--G3);letter-spacing:.03em}
+.v-note{font-size:10px;color:var(–G3);letter-spacing:.03em}
 
 /* ═══ SEC LABEL ═══ */
 .sec{
-  padding:4px 12px;background:var(--G4);
-  border-bottom:1px solid var(--G3);border-top:1px solid var(--G3);
-  font-size:8px;letter-spacing:.25em;color:var(--G3);text-transform:uppercase;
+padding:4px 12px;background:var(–G4);
+border-bottom:1px solid var(–G3);border-top:1px solid var(–G3);
+font-size:8px;letter-spacing:.25em;color:var(–G3);text-transform:uppercase;
 }
-.sec::before{content:'// '}
+.sec::before{content:’// ’}
 
 /* ═══ ENTRY ═══ */
-.ent-sec{border-bottom:1px solid var(--G3)}
+.ent-sec{border-bottom:1px solid var(–G3)}
 .ent-row{
-  display:grid;grid-template-columns:56px 1fr auto;
-  align-items:center;gap:10px;padding:8px 12px;
-  border-bottom:1px solid var(--G4);
+display:grid;grid-template-columns:56px 1fr auto;
+align-items:center;gap:10px;padding:8px 12px;
+border-bottom:1px solid var(–G4);
 }
 .ent-row:last-child{border-bottom:none}
 .et{font-size:9px;letter-spacing:.12em;text-transform:uppercase}
-.z1 .et{color:var(--G)}.z2 .et{color:var(--A)}.z3 .et{color:var(--G3)}
+.z1 .et{color:var(–G)}.z2 .et{color:var(–A)}.z3 .et{color:var(–G3)}
 .ep{font-size:17px;letter-spacing:.03em}
-.z1 .ep{color:var(--G)}.z2 .ep{color:var(--A)}
-.er{font-size:9px;color:var(--G3);text-align:right;max-width:130px;line-height:1.5}
+.z1 .ep{color:var(–G)}.z2 .ep{color:var(–A)}
+.er{font-size:9px;color:var(–G3);text-align:right;max-width:130px;line-height:1.5}
 
 /* ═══ TARGET/STOP ═══ */
-.ts-sec{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--G3)}
+.ts-sec{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(–G3)}
 .ts-cell{padding:9px 12px}
-.ts-cell:first-child{border-right:1px solid var(--G3)}
-.ts-lbl{font-size:8px;letter-spacing:.18em;color:var(--G3);text-transform:uppercase;margin-bottom:3px}
-.ts-lbl::before{content:'> ';color:var(--A);opacity:.5}
+.ts-cell:first-child{border-right:1px solid var(–G3)}
+.ts-lbl{font-size:8px;letter-spacing:.18em;color:var(–G3);text-transform:uppercase;margin-bottom:3px}
+.ts-lbl::before{content:’> ’;color:var(–A);opacity:.5}
 .ts-val{font-size:17px;letter-spacing:.03em}
-.tgt .ts-val{color:var(--A)}.stp .ts-val{color:var(--R)}
-.ts-pct{font-size:10px;color:var(--G3);margin-top:2px}
+.tgt .ts-val{color:var(–A)}.stp .ts-val{color:var(–R)}
+.ts-pct{font-size:10px;color:var(–G3);margin-top:2px}
 
 /* ═══ INDICATORS ═══ */
-.ind-sec{border-bottom:1px solid var(--G3)}
+.ind-sec{border-bottom:1px solid var(–G3)}
 .ind-row{
-  display:grid;grid-template-columns:82px 52px 1fr 90px;
-  align-items:center;gap:8px;
-  padding:6px 12px;border-bottom:1px solid var(--G4);font-size:11px;
+display:grid;grid-template-columns:82px 52px 1fr 90px;
+align-items:center;gap:8px;
+padding:6px 12px;border-bottom:1px solid var(–G4);font-size:11px;
 }
 .ind-row:last-child{border-bottom:none}
-.in{color:var(--G3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:.02em}
+.in{color:var(–G3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:.02em}
 .iv{letter-spacing:.02em}
-.ib{height:2px;background:var(--G4)}
+.ib{height:2px;background:var(–G4)}
 .if{height:100%;transition:width .4s;box-shadow:0 0 4px currentColor}
-.is{font-size:9px;color:var(--G3);text-align:right;white-space:nowrap}
+.is{font-size:9px;color:var(–G3);text-align:right;white-space:nowrap}
 
 /* ═══ LEGENDS ═══ */
-.lg-sec{border-bottom:1px solid var(--G3)}
-.lg-card{padding:9px 12px;border-bottom:1px solid var(--G4);border-left:3px solid var(--G3)}
+.lg-sec{border-bottom:1px solid var(–G3)}
+.lg-card{padding:9px 12px;border-bottom:1px solid var(–G4);border-left:3px solid var(–G3)}
 .lg-card:last-child{border-bottom:none}
 .lg-top{display:flex;align-items:baseline;gap:7px;margin-bottom:4px}
 .lg-name{font-size:12px;letter-spacing:.07em;flex:1}
-.lg-tool{font-size:8px;color:var(--G3);letter-spacing:.05em}
+.lg-tool{font-size:8px;color:var(–G3);letter-spacing:.05em}
 .lg-sc{font-size:13px;letter-spacing:.05em;min-width:42px;text-align:right}
-.lg-txt{font-size:11px;color:var(--G3);line-height:1.65;letter-spacing:.02em}
+.lg-txt{font-size:11px;color:var(–G3);line-height:1.65;letter-spacing:.02em}
 
 /* ═══ COPY BTN ═══ */
-.cp-sec{padding:9px 12px;border-bottom:1px solid var(--G3)}
+.cp-sec{padding:9px 12px;border-bottom:1px solid var(–G3)}
 .btn-copy{
-  width:100%;background:transparent;border:1px solid var(--G3);
-  color:var(--G3);font-family:var(--MONO);font-size:12px;
-  letter-spacing:.16em;padding:10px 0;cursor:pointer;
-  transition:all .12s;text-transform:uppercase;
+width:100%;background:transparent;border:1px solid var(–G3);
+color:var(–G3);font-family:var(–MONO);font-size:12px;
+letter-spacing:.16em;padding:10px 0;cursor:pointer;
+transition:all .12s;text-transform:uppercase;
 }
-.btn-copy::before{content:'> ';color:var(--A);opacity:.6}
-.btn-copy:hover{border-color:var(--G);color:var(--G)}
-.btn-copy.done{border-color:var(--G);color:var(--G);text-shadow:0 0 7px rgba(0,255,65,.5)}
+.btn-copy::before{content:’> ’;color:var(–A);opacity:.6}
+.btn-copy:hover{border-color:var(–G);color:var(–G)}
+.btn-copy.done{border-color:var(–G);color:var(–G);text-shadow:0 0 7px rgba(0,255,65,.5)}
 
 /* ═══ FOOTER ═══ */
-.footer{padding:9px 12px 5px;font-size:8px;color:var(--G3);letter-spacing:.1em;line-height:2.2;text-align:center}
+.footer{padding:9px 12px 5px;font-size:8px;color:var(–G3);letter-spacing:.1em;line-height:2.2;text-align:center}
 
 /* ═══ OVERLAY ═══ */
 .overlay{
-  display:none;position:fixed;inset:0;
-  max-width:600px;left:50%;transform:translateX(-50%);width:100%;
-  background:rgba(5,10,5,.95);z-index:900;
-  flex-direction:column;align-items:center;justify-content:center;
+display:none;position:fixed;inset:0;
+max-width:600px;left:50%;transform:translateX(-50%);width:100%;
+background:rgba(5,10,5,.95);z-index:900;
+flex-direction:column;align-items:center;justify-content:center;
 }
 .overlay.on{display:flex}
 .load-box{
-  border:1px solid var(--G);padding:22px 30px;text-align:center;
-  background:var(--BG1);min-width:210px;
-  box-shadow:0 0 28px rgba(0,255,65,.1),inset 0 0 28px rgba(0,255,65,.03);
+border:1px solid var(–G);padding:22px 30px;text-align:center;
+background:var(–BG1);min-width:210px;
+box-shadow:0 0 28px rgba(0,255,65,.1),inset 0 0 28px rgba(0,255,65,.03);
 }
 .load-sym{
-  font-size:28px;letter-spacing:.28em;color:var(--G);
-  margin-bottom:11px;line-height:1;
-  text-shadow:0 0 12px rgba(0,255,65,.6);
+font-size:28px;letter-spacing:.28em;color:var(–G);
+margin-bottom:11px;line-height:1;
+text-shadow:0 0 12px rgba(0,255,65,.6);
 }
 .load-cur{
-  display:inline-block;width:14px;height:26px;background:var(--G);
-  vertical-align:middle;animation:blink .6s step-end infinite;
-  box-shadow:0 0 10px var(--G);
+display:inline-block;width:14px;height:26px;background:var(–G);
+vertical-align:middle;animation:blink .6s step-end infinite;
+box-shadow:0 0 10px var(–G);
 }
-.load-bar{height:2px;background:var(--G4);overflow:hidden;margin-bottom:10px}
+.load-bar{height:2px;background:var(–G4);overflow:hidden;margin-bottom:10px}
 .load-fill{
-  height:100%;background:var(--G);animation:scan 1s linear infinite;
-  box-shadow:0 0 6px var(--G);
+height:100%;background:var(–G);animation:scan 1s linear infinite;
+box-shadow:0 0 6px var(–G);
 }
 @keyframes scan{0%{width:0%;margin-left:0}50%{width:40%;margin-left:30%}100%{width:0%;margin-left:100%}}
-.load-lbl{font-size:8px;color:var(--G3);letter-spacing:.28em}
-.load-src{font-size:8px;color:var(--G3);opacity:.45;letter-spacing:.1em;margin-top:5px}
+.load-lbl{font-size:8px;color:var(–G3);letter-spacing:.28em}
+.load-src{font-size:8px;color:var(–G3);opacity:.45;letter-spacing:.1em;margin-top:5px}
 
 /* ═══ TOAST ═══ */
 .toast{
-  position:fixed;bottom:calc(10px + env(safe-area-inset-bottom));
-  left:50%;transform:translateX(-50%) translateY(60px);
-  background:var(--BG1);border:1px solid var(--G3);
-  color:var(--G);padding:7px 15px;font-family:var(--MONO);
-  font-size:11px;letter-spacing:.06em;z-index:9999;
-  transition:transform .2s;white-space:nowrap;max-width:92vw;
-  text-shadow:0 0 5px rgba(0,255,65,.4);
+position:fixed;bottom:calc(10px + env(safe-area-inset-bottom));
+left:50%;transform:translateX(-50%) translateY(60px);
+background:var(–BG1);border:1px solid var(–G3);
+color:var(–G);padding:7px 15px;font-family:var(–MONO);
+font-size:11px;letter-spacing:.06em;z-index:9999;
+transition:transform .2s;white-space:nowrap;max-width:92vw;
+text-shadow:0 0 5px rgba(0,255,65,.4);
 }
 .toast.on{transform:translateX(-50%) translateY(0)}
 
 /* ═══ RESPONSIVE ═══ */
 @media(max-width:420px){
-  .p-price{font-size:27px}.p-pct{font-size:17px}.sc-num{font-size:33px}
-  .ind-row{grid-template-columns:70px 46px 1fr 76px;font-size:10px}
+.p-price{font-size:27px}.p-pct{font-size:17px}.sc-num{font-size:33px}
+.ind-row{grid-template-columns:70px 46px 1fr 76px;font-size:10px}
 }
 @media(max-width:340px){
-  .ts-sec{grid-template-columns:1fr}
-  .ts-cell:first-child{border-right:none;border-bottom:1px solid var(--G3)}
-  .ind-row{grid-template-columns:64px 42px 1fr}.is{display:none}
+.ts-sec{grid-template-columns:1fr}
+.ts-cell:first-child{border-right:none;border-bottom:1px solid var(–G3)}
+.ind-row{grid-template-columns:64px 42px 1fr}.is{display:none}
 }
 </style>
+
 </head>
 <body>
 
 <!-- HEADER -->
+
 <div class="hdr">
   <div class="hdr-l">
     <div class="hdr-logo"><b>CEOK</b> TICKER<span class="cur"></span></div>
@@ -319,6 +326,7 @@ input:focus{border-bottom-color:var(--G2)}
 </div>
 
 <!-- LOADING OVERLAY -->
+
 <div class="overlay" id="overlay">
   <div class="load-box">
     <div class="load-sym" id="loadSym">----<span class="load-cur"></span></div>
@@ -329,6 +337,7 @@ input:focus{border-bottom-color:var(--G2)}
 </div>
 
 <!-- CLI INPUT -->
+
 <div class="cli">
   <div class="cli-row">
     <span class="prompt">$&nbsp;ANALYZE</span>
@@ -353,9 +362,23 @@ input:focus{border-bottom-color:var(--G2)}
     <span class="chip" onclick="ck(this,'KRW-BTC')">BTC</span>
     <span class="chip" onclick="ck(this,'KRW-ETH')">ETH</span>
   </div>
+  <div class="chip-sep">// KR_STOCKS — 회사명 입력</div>
+  <div class="chips">
+    <span class="chip" onclick="ck(this,'삼성전자')">삼성전자</span>
+    <span class="chip" onclick="ck(this,'SK하이닉스')">SK하이닉스</span>
+    <span class="chip" onclick="ck(this,'LG에너지솔루션')">LG에너지솔루션</span>
+    <span class="chip" onclick="ck(this,'카카오')">카카오</span>
+    <span class="chip" onclick="ck(this,'네이버')">네이버</span>
+    <span class="chip" onclick="ck(this,'현대차')">현대차</span>
+    <span class="chip" onclick="ck(this,'셀트리온')">셀트리온</span>
+    <span class="chip" onclick="ck(this,'POSCO홀딩스')">POSCO홀딩스</span>
+    <span class="chip" onclick="ck(this,'KB금융')">KB금융</span>
+    <span class="chip" onclick="ck(this,'삼성바이오로직스')">삼성바이오로직스</span>
+  </div>
 </div>
 
 <!-- COMMAND LOG -->
+
 <div class="log-wrap">
   <div class="log-hdr">COMMAND LOG</div>
   <div class="log-body" id="cmdLog">
@@ -366,9 +389,11 @@ input:focus{border-bottom-color:var(--G2)}
 </div>
 
 <!-- RESULT -->
+
 <div class="result" id="result">
 
   <!-- 가격 -->
+
   <div class="p-sec">
     <div class="p-top">
       <div>
@@ -389,6 +414,7 @@ input:focus{border-bottom-color:var(--G2)}
   </div>
 
   <!-- 종합 점수 -->
+
   <div class="sc-sec">
     <div class="sc-l">
       <div class="sc-num" id="rScore">—</div>
@@ -402,12 +428,14 @@ input:focus{border-bottom-color:var(--G2)}
   </div>
 
   <!-- 진입 추천가 -->
+
   <div class="ent-sec">
     <div class="sec">진입 추천가</div>
     <div id="rEntry"></div>
   </div>
 
   <!-- 목표/손절 -->
+
   <div class="ts-sec">
     <div class="ts-cell tgt">
       <div class="ts-lbl">TARGET</div>
@@ -422,18 +450,21 @@ input:focus{border-bottom-color:var(--G2)}
   </div>
 
   <!-- 기술 지표 -->
+
   <div class="ind-sec">
     <div class="sec">TECHNICAL_INDICATORS</div>
     <div id="rInds"></div>
   </div>
 
   <!-- 전설 트레이더 -->
+
   <div class="lg-sec">
     <div class="sec">LEGENDARY_TRADERS</div>
     <div id="rLegends"></div>
   </div>
 
   <!-- 복사 -->
+
   <div class="cp-sec">
     <button class="btn-copy" id="copyBtn" onclick="copyResult()">
       <span id="copyTxt">카톡 붙여넣기용 복사</span>
@@ -597,6 +628,58 @@ async function fetchUpbit(ticker){
 function fetchOHLCV(ticker){return ticker.startsWith('KRW-')?fetchUpbit(ticker):fetchUS(ticker);}
 
 // ═══════════════════════════════════════
+// 한국 주식 — 이름 검색 → 심볼 → 데이터
+// ═══════════════════════════════════════
+
+// 한국어 문자 포함 여부 판별
+function isKR(s){ return /[\uAC00-\uD7A3\u3131-\u318E]/.test(s); }
+
+// Yahoo Finance Search API → KR 종목 심볼 반환
+async function searchKR(name){
+  const q = encodeURIComponent(name);
+  // query1 + query2 각각 4 proxies = 8개 동시
+  const urls = [
+    `https://query1.finance.yahoo.com/v1/finance/search?q=${q}&lang=ko-KR&region=KR&quotesCount=6&newsCount=0`,
+    `https://query2.finance.yahoo.com/v1/finance/search?q=${q}&lang=ko-KR&region=KR&quotesCount=6&newsCount=0`,
+  ];
+  const attempts = urls.flatMap(u =>
+    PROXIES.map(fn => tFetch(fn(u), 9000).then(r => r.json()).then(raw => {
+      const data = raw?.contents ? JSON.parse(raw.contents) : raw;
+      const quotes = data?.quotes || [];
+      // .KS = KOSPI, .KQ = KOSDAQ 필터
+      const kr = quotes.find(q => /\.(KS|KQ)$/.test(q.symbol));
+      if(!kr) throw Error('not found');
+      return {
+        symbol: kr.symbol,
+        name: kr.shortname || kr.longname || name,
+        exchange: kr.symbol.endsWith('.KQ') ? 'KOSDAQ' : 'KOSPI',
+      };
+    }))
+  );
+  return Promise.any(attempts);
+}
+
+// KR 종목 OHLCV — Yahoo Finance .KS/.KQ + Stooq .kr 병렬
+function fetchKR(symbol){
+  const code = symbol.replace(/\.(KS|KQ)$/,'');
+  const stooq = `https://stooq.com/q/d/l/?s=${code}.kr&i=d`;
+  const y1 = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(symbol)}?interval=1d&range=1y`;
+  const y2 = `https://query2.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(symbol)}?interval=1d&range=1y`;
+  return Promise.any([
+    // Stooq × 4 — KR 코드 .kr 접미
+    ...PROXIES.map(fn => tFetch(fn(stooq)).then(r=>r.text()).then(t=>{
+      const d=parseStooq(t);
+      // Stooq KR 데이터는 KRW 단위
+      if(d.price < 500) throw Error('KR price suspicious'); // USD 오류 방어
+      d.currency='KRW'; return d;
+    })),
+    // Yahoo q1/q2 × 4 각
+    ...PROXIES.map(fn=>tFetch(fn(y1)).then(r=>r.json()).then(parseYahoo)),
+    ...PROXIES.map(fn=>tFetch(fn(y2)).then(r=>r.json()).then(parseYahoo)),
+  ]);
+}
+
+// ═══════════════════════════════════════
 // INDICATORS
 // ═══════════════════════════════════════
 function cRSI(cl,p=14){
@@ -725,29 +808,65 @@ function analyze(ohlcv){
 // RENDER
 // ═══════════════════════════════════════
 async function go(){
-  const raw=$('inp').value.trim().toUpperCase();
-  if(!raw)return;
+  const rawInput=$('inp').value.trim();
+  if(!rawInput)return;
+
+  const korean = isKR(rawInput);
+  // 미국/코인 티커는 대문자, 한국어 이름은 그대로
+  const raw = korean ? rawInput : rawInput.toUpperCase();
+
   $('runBtn').disabled=true;
   $('result').classList.remove('on');
-  showLoad(raw,raw.startsWith('KRW-')?'UPBIT API':'STOOQ + YAHOO ×12');
 
   const ts=new Date().toLocaleTimeString('ko-KR');
-  log(`[${ts}] ANALYZE ${raw}...`,'info');
+  log(`[${ts}] ANALYZE: "${raw}"...`,'info');
+
+  let displayName = raw;  // 결과 화면에 표시할 이름
+  let krInfo = null;      // {symbol, name, exchange}
 
   try{
-    log(`FETCHING OHLCV_DATA: ${raw.startsWith('KRW-')?'UPBIT':'PARALLEL_12_REQ'}...`,'info');
-    const o=await fetchOHLCV(raw);
-    log(`DATA_OK: ${(o.src||'').toUpperCase()} / ${o.closes.length} CANDLES`,'ok');
+    let o;
+
+    if(korean){
+      // ── 한국 주식: 이름 → 심볼 → 데이터 ──
+      showLoad(raw,'KR_NAME_SEARCH...');
+      log(`KR_SEARCH: "${raw}" → YAHOO FINANCE...`,'info');
+
+      krInfo = await searchKR(raw);
+      displayName = krInfo.name;
+      log(`KR_FOUND: ${krInfo.symbol} (${krInfo.exchange}) — ${krInfo.name}`,'ok');
+
+      showLoad(krInfo.name, krInfo.symbol+' // '+krInfo.exchange);
+      log(`FETCHING_OHLCV: ${krInfo.symbol}...`,'info');
+      o = await fetchKR(krInfo.symbol);
+
+    } else if(raw.startsWith('KRW-')){
+      // ── 업비트 코인 ──
+      showLoad(raw,'UPBIT API');
+      log(`FETCHING_OHLCV: UPBIT / ${raw}...`,'info');
+      o = await fetchUpbit(raw);
+
+    } else {
+      // ── 미국 주식 ──
+      showLoad(raw,'STOOQ + YAHOO ×12');
+      log(`FETCHING_OHLCV: PARALLEL_12_REQ / ${raw}...`,'info');
+      o = await fetchUS(raw);
+    }
+
+    log(`DATA_OK: ${(o.src||'').toUpperCase()} / ${o.closes.length} CANDLES / ${o.currency}`,'ok');
 
     const isCoin=raw.startsWith('KRW-');
     const f=v=>fmt(v,o.currency);
     const d=o.price-o.prevClose,dp=d/o.prevClose*100,up=d>=0;
 
-    T('rSym',raw);
-    T('rSrc',(o.src||'').toUpperCase()+' // '+o.currency);
+    T('rSym', displayName);
+    // 출처 줄: KR은 심볼+거래소, 나머지는 소스+통화
+    T('rSrc', krInfo
+      ? `${krInfo.symbol} // ${krInfo.exchange}`
+      : (o.src||'').toUpperCase()+' // '+o.currency);
 
     const pEl=$('rPrice');pEl.textContent=f(o.price);pEl.className='p-price '+(up?'cg':'cr');
-    const cEl=$('rChg');cEl.textContent=`${up?'+':''}${isCoin?Math.round(d).toLocaleString('ko-KR'):d.toFixed(2)}  (prev_close)`;
+    const cEl=$('rChg');cEl.textContent=`${up?'+':''}${(korean||isCoin)?Math.round(d).toLocaleString('ko-KR'):d.toFixed(2)}  (prev_close)`;
     const pEl2=$('rPct');pEl2.textContent=`${up?'+':''}${dp.toFixed(2)}%`;pEl2.className='p-pct '+(up?'cg':'cr');
 
     const sig=analyze(o);
@@ -800,14 +919,16 @@ async function go(){
     }).join(''));
 
     $('result').classList.add('on');
-    _last={raw,o,sig,f};
-    log(`COMPLETE: ${raw} — ${sig.norm}점 / ${sig.verdict}`,'ok');
+    _last={raw:displayName,o,sig,f};
+    log(`COMPLETE: ${displayName} — ${sig.norm}점 / ${sig.verdict}`,'ok');
     setTimeout(()=>$('result').scrollIntoView({behavior:'smooth',block:'start'}),60);
-    toast(`> ${raw} — 분석 완료 [${o.src}]`);
+    toast(`> ${displayName} — 분석 완료 [${o.src}]`);
 
   }catch(e){
     log(`ERROR: ${raw} — ${e.message||'FETCH_FAILED'}`,'err');
-    toast(`> ERR: ${raw} — 데이터 없음`);
+    // 한국주식 검색 실패 시 힌트
+    if(korean) log('HINT: 회사명을 더 정확히 입력하세요 (예: 삼성전자, SK하이닉스)','warn');
+    toast(`> ERR: ${raw} — ${korean?'종목 검색 실패':'데이터 없음'}`);
     console.error(e);
   }finally{
     $('runBtn').disabled=false;
@@ -815,5 +936,6 @@ async function go(){
   }
 }
 </script>
+
 </body>
 </html>
